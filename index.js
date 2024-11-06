@@ -1,18 +1,3 @@
-/*
- *    ___   _     __   _      __  
- *   / _ | (_)___/ /  (_)__  / /__
- *  / __ |/ / __/ /__/ / _ \/  '_/
- * /_/ |_/_/_/ /____/_/_//_/_/\_\ 
- *                               
- *                                      
- *                                      
- *              
- *  AirLink Panel 0.1.0-beta1
- *  (c) 2024 Meesam and contributers
- * 
-*/
-
-
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
@@ -40,12 +25,6 @@ const { init } = require('./handlers/init.js');
 
 const log = new CatLoggr();
 
-/**
- * Initializes the Express application with necessary middleware for parsing HTTP request bodies,
- * handling sessions, and integrating WebSocket functionalities. It sets EJS as the view engine,
- * reads route files from the 'routes' directory, and applies WebSocket enhancements to each route.
- * Finally, it sets up static file serving and starts listening on a specified port.
- */
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

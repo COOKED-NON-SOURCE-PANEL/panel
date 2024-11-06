@@ -1,60 +1,102 @@
-<%- include('components/template') %>
-<main id="content">
-  <div class="bg-transparent">
-    <div class="sm:flex sm:items-center px-8 pt-4">
-      <div class="sm:flex-auto">
-        <h1 class="text-base font-medium leading-6 text-white mb-4"><%= req.translations.instances %></h1>
-
-      </div>
-      
-    </div>
-  </div>
-  
-  <div class="px-4 sm:px-6 lg:px-8">
-    
-      <div class="flex flex-col">
-        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-            <div class="shadow overflow-hidden border-b border-gray-700/10 sm:rounded-lg">
-              <table class="min-w-full divide-y divide-gray-700/10">
-                <thead class="bg-gray-700/25">
-                  <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STATUS</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CPU</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RAM</th>
-                  </tr>
-                </thead>
-                <tbody class="bg-gray-700/50 divide-y divide-gray-700/10">
-            
-                  <% if (instances.length > 0) { %>
-                    <% instances.forEach(function (instance) { %>
-                      <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white"><%= instance.Name %></td>
-                        <td data-status-bg class="px-6 py-4 whitespace-nowrap text-sm text-gray-400"><%= req.translations.loading %></td>
-                        <td data-cpu-usage class="px-6 py-4 whitespace-nowrap text-sm text-gray-400"><%= req.translations.loading %></td>
-                        <td data-ram-usage class="px-6 py-4 whitespace-nowrap text-sm text-gray-400"><%= req.translations.loading %></td>
-                      </tr>
-                    <% }); %>
-                  <% } else { %>
-                    <tr>
-                      <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                        No Instances Found
-                      </td>
-                    </tr>
-                  <% } %>                  
-                </tbody>
-              </table>
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= name %> - Instances</title>
+  <link href="../assets/tailwind.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@500,300,600,400,700&display=swap" rel="stylesheet">
+</head>
+</body>
+</html>
+<body class="bg-[#10181e]" style="font-family: 'Space Grotesk', sans-serif;">
+  <%- include('components/template') %>
+  <div class="md:pl-64 flex flex-col flex-1 h-screen"> <%- include('components/header') %>
+    <main class="flex-1 pb-32">
+      <div class="py-6">
+        <% /* Skeleton loader, lasts about 0.3s to let the page content load */ %>
+        <%- include('components/skeleton') %>
+        <div class="hidden max-w-screen-2xl pt-8 mx-auto px-4 sm:px-6 md:px-16" id="content">
+          <div class="lg:flex lg:items-center lg:justify-between rounded-3xl mb-8">
+            <div class="min-w-0 flex-1">
+              <div class="flex">
+                <div class="relative">
+                  <h2 class="text-xl font-semibold text-white sm:truncate tracking-tight">Instances</h2>
+                  <p class="text-sm font-normal text-zinc-400">View a list of your Instances on <%= name %>.</p>
+                </div>
+              </div>
+            </div>
+           
+          </div>
+          <% if (req.query.err && req.query.err == "CREATED") { %>
+          <div class="rounded-2xl bg-[#162027]/30 shadow border-t border-white/5 p-8 mb-5">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <img src="../assets/giftOpened.png" class="h-7 w-7 mt-2">
+              </div>
+              <div class="ml-5">
+                <h3 class="text-md font-medium tracking-tight text-white">Server queued for deployment</h3>
+                <div class="mt-1 text-sm text-zinc-400">
+                  <p>Please allow it a few minutes to install the requested software. You can manage your server via the Panel.</p>
+                </div>
+              </div>
             </div>
           </div>
+          <% } %>
+          <% if (req.query.err && req.query.err == "MODIFIED") { %>
+            <div class="rounded-2xl bg-[#162027]/30 shadow border-t border-white/5 p-8 mb-5">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <img src="../assets/giftOpened.png" class="h-7 w-7 mt-2">
+                </div>
+                <div class="ml-5">
+                  <h3 class="text-md font-medium tracking-tight text-white">Server queued for modification</h3>
+                  <div class="mt-1 text-sm text-zinc-400">
+                    <p>Please allow up to 60 seconds for server edits to be completed.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% } %>
+          <% if (instances.length > 0) { %>
+            <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-4">
+              <% instances.forEach(function (instance) { %>
+                <div class="px-4 py-4 rounded-2xl bg-[#162027]/30 flex justify-center shadow border-t border-white/5">
+                  <div class="relative py-8">
+                    <div class="flex justify-center">
+                      <img src="https://minecraft.wiki/images/thumb/White_Wool_JE2_BE2.png/150px-White_Wool_JE2_BE2.png" class="h-14 w-14 mb-4 flex justify-center bg-white/5 rounded-full p-3">
+                    </div>
+                    <div class="relative text-center">
+                      <h2 class="text-lg font-semibold text-white sm:truncate sm:text-2xl sm:tracking-tight"><%= instance.Name %></h2>
+                      <p data-status-bg class="text-sm font-light text-zinc-500 mt-4"><%= req.translations.loading %></p>
+                      <p data-cpu-usage class="text-sm font-light text-zinc-500 mt-4"><%= req.translations.loading %></p>
+                      <p data-ram-usage class="text-sm font-light text-zinc-500 mt-4"><%= req.translations.loading %></p>
+                    </div>
+                    <div class="flex space-x-3 mt-6">
+                      <a href="/instance/<%= instance.Id %>" type="button" class="inline-flex justify-center flex-1 items-center rounded-2xl border-none bg-white/5 px-4 py-2.5 text-sm font-medium text-white ring-none focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mr-2 h-5 inline-flex ">
+                          <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 0-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 0 0 .75-.75v-4a.75.75 0 0 1 1.5 0v4A2.25 2.25 0 0 1 12.75 17h-8.5A2.25 2.25 0 0 1 2 14.75v-8.5A2.25 2.25 0 0 1 4.25 4h5a.75.75 0 0 1 0 1.5h-5Z" clip-rule="evenodd" />
+                          <path fill-rule="evenodd" d="M6.194 12.753a.75.75 0 0 0 1.06.053L16.5 4.44v2.81a.75.75 0 0 0 1.5 0v-4.5a.75.75 0 0 0-.75-.75h-4.5a.75.75 0 0 0 0 1.5h2.553l-9.056 8.194a.75.75 0 0 0-.053 1.06Z" clip-rule="evenodd" />
+                        </svg>                              
+                        View 
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+            </dl>
+          <% } %>
+              
+            
+          </dl>
         </div>
       </div>
-    </div>
+    </main>
   </div>
   </div>
-</main>
-<%- include('components/footer') %>
-
+</body>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const instances = document.querySelectorAll('[data-instance-id]');
